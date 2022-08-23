@@ -28,8 +28,14 @@ class Slidable extends StatefulWidget {
     this.direction = Axis.horizontal,
     this.dragStartBehavior = DragStartBehavior.down,
     this.useTextDirection = true,
+    this.dragStartCallBack,
+    this.dragEndCallBack,
+    this.dragUpdateCallBack,
     required this.child,
   }) : super(key: key);
+  final DragStartCallBack? dragStartCallBack;
+  final DragEndCallBack? dragEndCallBack;
+  final DragUpdateCallBack? dragUpdateCallBack;
 
   /// Whether this slidable is interactive.
   ///
@@ -218,6 +224,7 @@ class _SlidableState extends State<Slidable>
   }
 
   ActionPane? get startActionPane => widget.startActionPane;
+
   ActionPane? get endActionPane => widget.endActionPane;
 
   Alignment get actionPaneAlignment {
@@ -263,6 +270,9 @@ class _SlidableState extends State<Slidable>
       controller: controller,
       direction: widget.direction,
       dragStartBehavior: widget.dragStartBehavior,
+      dragEndCallBack: widget.dragEndCallBack,
+      dragUpdateCallBack: widget.dragUpdateCallBack,
+      dragStartCallBack: widget.dragStartCallBack,
       child: SlidableNotificationSender(
         tag: widget.groupTag,
         controller: controller,

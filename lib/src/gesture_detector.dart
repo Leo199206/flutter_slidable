@@ -5,17 +5,25 @@ import 'controller.dart';
 
 // INTERNAL USE
 // ignore_for_file: public_member_api_docs
+typedef DragStartCallBack = void Function(DragStartDetails details);
+typedef DragUpdateCallBack = void Function(DragUpdateDetails details);
+typedef DragEndCallBack = void Function(DragEndDetails details);
 
 class SlidableGestureDetector extends StatefulWidget {
-  const SlidableGestureDetector({
-    Key? key,
-    this.enabled = true,
-    required this.controller,
-    required this.direction,
-    required this.child,
-    this.dragStartBehavior = DragStartBehavior.start,
-  }) : super(key: key);
-
+  const SlidableGestureDetector(
+      {Key? key,
+      this.enabled = true,
+      required this.controller,
+      required this.direction,
+      required this.child,
+      this.dragStartCallBack,
+      this.dragEndCallBack,
+      this.dragUpdateCallBack,
+      this.dragStartBehavior = DragStartBehavior.start})
+      : super(key: key);
+  final DragStartCallBack? dragStartCallBack;
+  final DragEndCallBack? dragEndCallBack;
+  final DragUpdateCallBack? dragUpdateCallBack;
   final SlidableController controller;
   final Widget child;
   final Axis direction;
@@ -81,6 +89,7 @@ class _SlidableGestureDetectorState extends State<SlidableGestureDetector> {
         overallDragAxisExtent *
         widget.controller.ratio *
         widget.controller.direction.value;
+    widget.dragStartCallBack?.call(details);
   }
 
   void handleDragUpdate(DragUpdateDetails details) {
@@ -88,6 +97,7 @@ class _SlidableGestureDetectorState extends State<SlidableGestureDetector> {
     dragExtent += delta;
     lastPosition = details.localPosition;
     widget.controller.ratio = dragExtent / overallDragAxisExtent;
+    widget.dragUpdateCallBack?.call(details);
   }
 
   void handleDragEnd(DragEndDetails details) {
@@ -100,5 +110,6 @@ class _SlidableGestureDetectorState extends State<SlidableGestureDetector> {
       details.primaryVelocity,
       gestureDirection,
     );
+    widget.dragEndCallBack?.call(details);
   }
 }
