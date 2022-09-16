@@ -8,6 +8,7 @@ import 'controller.dart';
 typedef DragStartCallBack = void Function(DragStartDetails details);
 typedef DragUpdateCallBack = void Function(DragUpdateDetails details);
 typedef DragEndCallBack = void Function(DragEndDetails details);
+typedef TapDownCallBack = void Function(TapDownDetails details);
 
 class SlidableGestureDetector extends StatefulWidget {
   const SlidableGestureDetector(
@@ -19,11 +20,13 @@ class SlidableGestureDetector extends StatefulWidget {
       this.dragStartCallBack,
       this.dragEndCallBack,
       this.dragUpdateCallBack,
+      this.tapDownCallBack,
       this.dragStartBehavior = DragStartBehavior.start})
       : super(key: key);
   final DragStartCallBack? dragStartCallBack;
   final DragEndCallBack? dragEndCallBack;
   final DragUpdateCallBack? dragUpdateCallBack;
+  final TapDownCallBack? tapDownCallBack;
   final SlidableController controller;
   final Widget child;
   final Axis direction;
@@ -65,6 +68,7 @@ class _SlidableGestureDetectorState extends State<SlidableGestureDetector> {
     final canDragHorizontally = directionIsXAxis && widget.enabled;
     final canDragVertically = !directionIsXAxis && widget.enabled;
     return GestureDetector(
+      onTapDown: handleTapDown,
       onHorizontalDragStart: canDragHorizontally ? handleDragStart : null,
       onHorizontalDragUpdate: canDragHorizontally ? handleDragUpdate : null,
       onHorizontalDragEnd: canDragHorizontally ? handleDragEnd : null,
@@ -80,6 +84,10 @@ class _SlidableGestureDetectorState extends State<SlidableGestureDetector> {
   double get overallDragAxisExtent {
     final Size? size = context.size;
     return directionIsXAxis ? size!.width : size!.height;
+  }
+
+  void handleTapDown(TapDownDetails details) {
+    widget.tapDownCallBack?.call(details);
   }
 
   void handleDragStart(DragStartDetails details) {

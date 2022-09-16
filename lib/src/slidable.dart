@@ -31,11 +31,13 @@ class Slidable extends StatefulWidget {
     this.dragStartCallBack,
     this.dragEndCallBack,
     this.dragUpdateCallBack,
+    this.tapDownCallBack,
     required this.child,
   }) : super(key: key);
   final DragStartCallBack? dragStartCallBack;
   final DragEndCallBack? dragEndCallBack;
   final DragUpdateCallBack? dragUpdateCallBack;
+  final TapDownCallBack? tapDownCallBack;
 
   /// Whether this slidable is interactive.
   ///
@@ -273,6 +275,7 @@ class _SlidableState extends State<Slidable>
       dragEndCallBack: widget.dragEndCallBack,
       dragUpdateCallBack: widget.dragUpdateCallBack,
       dragStartCallBack: widget.dragStartCallBack,
+      tapDownCallBack: widget.tapDownCallBack,
       child: SlidableNotificationSender(
         tag: widget.groupTag,
         controller: controller,
